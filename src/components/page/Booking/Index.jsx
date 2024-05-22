@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 export function Content() {
   const [bookings, setBookings] = useState([]);
   useEffect(() => {
@@ -10,11 +10,14 @@ export function Content() {
         const requestOptions = {
           method: "GET",
           headers: myHeaders,
-          redirect: "follow"
+          redirect: "follow",
         };
-        const response = await fetch("http://127.0.0.1:8000/api/bookings", requestOptions);
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/bookings",
+          requestOptions
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setBookings(data);
@@ -29,9 +32,11 @@ export function Content() {
     <div>
       <h2 className="mt-3 text-center title">MANAGE BOOKING</h2>
       <div className="buttonAddBooking m-3">
-        <button type="button" className="btn btn-success mx-3">
-          Add Booking <i className="fa fa-plus"></i>
-        </button>
+        <Link to="/bookings/create">
+          <button type="button" className="btn btn-success mx-3">
+            Add Booking <i className="fa fa-plus"></i>
+          </button>
+        </Link>
       </div>
       <div className="tableBooking mt-3">
         <table className="mx-3 table table-striped">
@@ -48,7 +53,7 @@ export function Content() {
             </tr>
           </thead>
           <tbody>
-            {bookings.map(booking => (
+            {bookings.map((booking) => (
               <tr key={booking.id}>
                 <td>{booking.id}</td>
                 <td>{booking.user.name}</td>
@@ -59,8 +64,15 @@ export function Content() {
                 <td>{booking.check_out_date}</td>
                 <td>
                   <div className="d-flex">
-                    <Link to="/edit" className="mx-3 btn btn-warning btn-sm">Edit</Link>
-                    <Link to="/delete" className="btn btn-danger btn-sm">Delete</Link>
+                    <Link
+                      to="/bookings/edit"
+                      className="mx-3 btn btn-warning btn-sm"
+                    >
+                      Edit
+                    </Link>
+                    <Link to="/delete" className="btn btn-danger btn-sm">
+                      Delete
+                    </Link>
                   </div>
                 </td>
               </tr>

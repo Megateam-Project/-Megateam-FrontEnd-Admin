@@ -3,8 +3,8 @@
   height: 100vh;
 }
 .container-fluid {
-  background-color: #f9faff;
-  height: 100%;
+  width: 100vw;
+  
 }
 .sidebar {
   top: 0;

@@ -16,18 +16,23 @@ export function Sidebar() {
           </div>
         </div>
         <ul className="mt-4">
+        <li style={{ listStyleType: "none" }} className="mt-4">
+            <a href="/dashboard" style={{ fontSize: "18px" }} className="text-decoration-none text-black" >
+              Dashboard
+            </a>
+          </li>
           <li style={{ listStyleType: "none" }} className="mt-4">
-            <a href="" style={{ fontSize: "18px" }} className="text-decoration-none text-black" >
+            <a href="/users" style={{ fontSize: "18px" }} className="text-decoration-none text-black" >
               Manage Users
             </a>
           </li>
           <li style={{ listStyleType: "none" }} className="mt-4">
-            <a href="" style={{ fontSize: "18px" }} className="text-decoration-none text-black">
+            <a href="/bookings" style={{ fontSize: "18px" }} className="text-decoration-none text-black">
               Manage Booking
             </a>
           </li>
           <li style={{ listStyleType: "none" }} className="mt-4">
-            <a href="" style={{ fontSize: "18px" }} className="text-decoration-none text-black" >
+            <a href="/rooms" style={{ fontSize: "18px" }} className="text-decoration-none text-black" >
               Manage Room
             </a>
           </li>

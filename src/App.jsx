@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Content } from "./components/page/Booking/Index";
 import { Navbar } from "./components/layouts/Header";
 import { Sidebar } from "./components/layouts/Sidebar";
+import { Edit }  from './components/page/Booking/Edit';
+import { Create } from './components/page/Booking/Create';
 
 function App() {
   return (
@@ -14,7 +16,9 @@ function App() {
             <Navbar />
             <div className="row">
               <Routes>
-                <Route path="/" element={<Content />} />
+                <Route path="/bookings" element={<Content />} />
+                <Route path="/bookings/create" element={<Create />} />
+                <Route path="/bookings/edit" element={<Edit />} />
                 {/* Add other routes here as needed */}
               </Routes>
             </div>
