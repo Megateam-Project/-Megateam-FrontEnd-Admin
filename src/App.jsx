@@ -18,7 +18,7 @@ function App() {
               <Routes>
                 <Route path="/bookings" element={<Content />} />
                 <Route path="/bookings/create" element={<Create />} />
-                <Route path="/bookings/edit" element={<Edit />} />
+                <Route path="/bookings/edit/:bookingId" element={<Edit />} />
                 {/* Add other routes here as needed */}
               </Routes>
             </div>
