@@ -13,6 +13,7 @@ export function CreateRoomForm() {
     convenient: "",
     number: "",
     discount: "",
+    create_by: "admin",
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export function CreateRoomForm() {
         formDataToSend.append(key, formData[key]);
       }
       await baseApi.postApi(BASE_URL + "rooms", formDataToSend);
+      console.log(formData)
       navigate("/rooms");
     } catch (error) {
       console.error("Error creating room:", error);
@@ -182,5 +184,5 @@ export function CreateRoomForm() {
         </form>
       </div>
     </div>
-  );
+  );  
 }
