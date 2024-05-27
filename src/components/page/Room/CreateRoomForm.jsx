@@ -34,20 +34,28 @@ export function CreateRoomForm() {
   };
   
   const handleCreate = async (e) => {
-    e.preventDefault();
-    try {
-      const formDataToSend = new FormData();
-      for (const key in formData) {
-        formDataToSend.append(key, formData[key]);
-      }
-      await baseApi.postApi(BASE_URL + "rooms", formDataToSend);
-      console.log(formData)
-      navigate("/rooms");
-    } catch (error) {
-      console.error("Error creating room:", error);
-      setError("Failed to create room. Please try again later.");
+  e.preventDefault();
+  try {
+    const formDataToSend = new FormData();
+    if (formData.image) {
+      formDataToSend.append("image", formData.image);
+      const imageUrl = URL.createObjectURL(formData.image);
+      setFormData((prevData) => ({
+        ...prevData,
+        image: imageUrl,
+      }));
     }
-  };
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+    await baseApi.postApi(BASE_URL + "rooms", formDataToSend);
+    console.log(formData);
+    navigate("/rooms");
+  } catch (error) {
+    console.error("Error creating room:", error);
+    setError("Failed to create room. Please try again later.");
+  }
+};
 
   return (
     <div>
@@ -128,7 +136,7 @@ export function CreateRoomForm() {
               Image
             </label>
             <input
-              type="file" // Sử dụng kiểu file để cho phép tải lên tệp
+              type="file"
               className="form-control"
               id="image"
               name="image"
