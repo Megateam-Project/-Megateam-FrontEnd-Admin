@@ -1,6 +1,7 @@
 import { useState } from "react";
 import baseApi from "../../../shared/services/base.api";
 import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../../shared/constants/constants.js";
 
 export function CreateRoomForm() {
   const [formData, setFormData] = useState({
@@ -8,7 +9,7 @@ export function CreateRoomForm() {
     type: "",
     description: "",
     price: "",
-    image: null, // Sửa đổi từ string thành null để lưu trữ file
+    image: null,
     convenient: "",
     number: "",
     discount: "",
@@ -18,12 +19,10 @@ export function CreateRoomForm() {
 
   const handleFormDataChange = (e) => {
     const { name, value, files } = e.target;
-
-    // Nếu trường là một trường file, lưu trữ tệp vào formData
     if (name === "image") {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0], // Lưu trữ tệp đầu tiên trong danh sách các tệp được chọn
+        [name]: files[0],
       }));
     } else {
       setFormData((prevData) => ({
@@ -32,20 +31,15 @@ export function CreateRoomForm() {
       }));
     }
   };
-
+  
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      // Tạo FormData object để gửi dữ liệu có chứa cả tệp hình ảnh
       const formDataToSend = new FormData();
       for (const key in formData) {
         formDataToSend.append(key, formData[key]);
       }
-
-      // Gửi yêu cầu tạo phòng mới lên server
-      await baseApi.postApi("rooms", formDataToSend);
-
-      // Chuyển hướng về trang danh sách phòng sau khi tạo thành công
+      await baseApi.postApi(BASE_URL + "rooms", formDataToSend);
       navigate("/rooms");
     } catch (error) {
       console.error("Error creating room:", error);
