@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import baseApi from "../../../shared/services/base.api";
 import DataTable from "react-data-table-component";
-import { EditOutlined, DeleteFilled } from "@ant-design/icons";
+import {PlusOutlined, EditOutlined, DeleteFilled } from "@ant-design/icons";
 
 export function IndexRoom() {
   const [rooms, setRooms] = useState([]);
@@ -55,6 +55,7 @@ export function IndexRoom() {
       name: "Action",
       cell: (row) => (
         <div className="d-flex">
+          
           <Link
             to={`/rooms/edit/${row.id}`}
             className="mx-3 btn btn-warning btn-sm"
@@ -85,6 +86,12 @@ export function IndexRoom() {
   return (
     <div>
       <h2 className="m-3 title">MANAGE ROOM</h2>
+      <h5>
+        ADD ROOM{" "}
+        <Link to="/rooms/create" className="mx-3 btn btn-success btn-sm">
+          <PlusOutlined />
+        </Link>
+      </h5>
       <div className="tableBooking mt-3">
         <DataTable columns={columns} data={data} pagination />
 
