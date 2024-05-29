@@ -9,7 +9,8 @@ import { Create } from "./components/page/Booking/Create";
 import { IndexRoom } from "./components/page/Room/IndexRoom";
 import { CreateRoomForm } from "./components/page/Room/CreateRoomForm";
 import { EditRoom } from "./components/page/Room/EditRoom";
-import { Content_User } from './components/page/User/Index';
+
+import { Content_User } from './components/page/User/IndexUser';
 import { Create_User } from './components/page/User/Create';
 import { Edit_User } from './components/page/User/Edit';
 
