@@ -24,10 +24,6 @@ export function Content_User() {
      
     },
     {
-      name: "Email",
-      selector: (row) => row.user.email,
-    },
-    {
       name: "Avata",
       cell: (row) => (
         <img
@@ -36,6 +32,10 @@ export function Content_User() {
           style={{ width: "100px", height: "auto" }}
         />
       ),
+    },
+    {
+      name: "Email",
+      selector: (row) => row.user.email,
     },
     {
       name: "Role",

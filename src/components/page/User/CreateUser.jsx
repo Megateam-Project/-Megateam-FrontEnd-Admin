@@ -22,7 +22,7 @@ export function Create_User() {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Avata"
+            label="Avatar"
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 20 }}
           >

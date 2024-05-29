@@ -11,8 +11,8 @@ import { CreateRoomForm } from "./components/page/Room/CreateRoomForm";
 import { EditRoom } from "./components/page/Room/EditRoom";
 
 import { Content_User } from './components/page/User/IndexUser';
-import { Create_User } from './components/page/User/Create';
-import { Edit_User } from './components/page/User/Edit';
+import { Create_User } from './components/page/User/CreateUser';
+import { Edit_User } from './components/page/User/EditUser';
 
 function App() {
   return (
