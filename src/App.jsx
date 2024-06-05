@@ -29,7 +29,7 @@ function App() {
                 <Route path="/rooms/edit/:roomId" element={<EditRoom />} />
                 <Route path="/users" element={<IndexUser />} />
                 <Route path="/users/create" element={<CreateUser />} />
-                <Route path="/users/edit" element={<EditUser />} />
+                <Route path="/users/edit/:userId" element={<EditUser />} />
                 {/* Add other routes here as needed */}
               </Routes>
             </div>

@@ -58,7 +58,8 @@ export function IndexUser() {
     },
   ];
   const transformData = (data) => {
-    return data.map((userInfo) => ({
+    if(!data) return ''
+    return data?.map((userInfo) => ({
       id: userInfo.id,
       name: userInfo.name,
       avatar: userInfo.avatar,

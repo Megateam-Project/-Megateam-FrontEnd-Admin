@@ -57,7 +57,7 @@ export function CreateUser() {
     <div>
       <h2 className="mt-3 text-center title">Create New User</h2>
       <div className="buttonBack m-3">
-        <Link to="/rooms" className="btn btn-secondary mx-3">
+        <Link to="/users" className="btn btn-secondary mx-3">
           Back
         </Link>
       </div>

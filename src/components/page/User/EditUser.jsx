@@ -27,7 +27,7 @@ export function EditUser() {
     <div>
       <h2 className="mt-3 text-center title">MANAGE USER</h2>
       <div className="buttonBack m-3">
-        <Link to="/rooms" className="btn btn-secondary mx-3">
+        <Link to="/users" className="btn btn-secondary mx-3">
           Back <ArrowLeftOutlined />
         </Link>
       </div>
