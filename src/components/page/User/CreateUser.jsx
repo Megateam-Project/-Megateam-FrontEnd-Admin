@@ -1,150 +1,173 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import baseApi from "../../../shared/services/base.api";
-import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../../shared/constants/constants.js";
-
-export function CreateUser() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    role: "",
-    image: null,
-    create_by: "admin",
-  });
-  const [error, setError] = useState(null);
+// import { Link } from "react-router-dom";
+const CreateUser = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+  const [create_by, setCreateBy] = useState("");
+ 
   const navigate = useNavigate();
 
-  const handleFormDataChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+  const handleNameChange = (e) => {
+    console.log(e);
+    setName(e.target.value);
   };
-
-  const handleCreate = async (e) => {
+  const handleEmailChange = (e) => {
+    console.log(e);
+    setEmail(e.target.value);
+  };
+  const handlePasswordChange = (e) => {
+    console.log(e);
+    setPassword(e.target.value);
+  };
+  const handlePhoneChange = (e) => {
+    console.log(e);
+    setPhone(e.target.value);
+  };
+  const handleRoleChange = (e) => {
+    console.log(e);
+    setRole(e.target.value);
+  };
+  const handleCreateByChange = (e) => {
+    console.log(e);
+    setCreateBy(e.target.value);
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formDataToSend = new FormData();
-      if (formData.image) {
-        formDataToSend.append("image", formData.image);
-        const imageUrl = URL.createObjectURL(formData.image);
-        setFormData((prevData) => ({
-          ...prevData,
-          image: imageUrl,
-        }));
-      }
-      for (const key in formData) {
-        formDataToSend.append(key, formData[key]);
-      }
-      await baseApi.postApi(BASE_URL + "users", formDataToSend);
-      console.log(formData);
+      await baseApi.postApi("users", {name,
+        email,
+        phone,
+        password,
+        role,
+        create_by,});
+      alert("Create successful");
       navigate("/users");
     } catch (error) {
-      console.error("Error creating user:", error);
-      setError("Failed to create user. Please try again later.");
+      console.error("Create failed", error);
+      alert("Create failed");
     }
   };
   return (
-    <div>
-      <h2 className="mt-3 text-center title">Create New User</h2>
-      <div className="buttonBack m-3">
-        <Link to="/users" className="btn btn-secondary mx-3">
-          Back
-        </Link>
-      </div>
-      <div className="d-flex flex-column justify-content-between align-items-center">
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
-        <form
-          className="rounded border border-danger-subtle w-50 p-3"
-          onSubmit={handleCreate}
-        >
-          <h3 className="text-center mt-2 mb-4">User information</h3>
-          <div className="mb-3">
+    <div className="mt-5 mb-5 mx-auto" style={{ maxWidth: "600px" }}>
+      <form className="  mt-4 " onSubmit={handleSubmit}>
+        <div className="container">
+          <div className="mb-3 ">
             <label htmlFor="name" className="form-label">
-              Name
+              <b style={{ color: "#7C6A46" }}> Name</b>
             </label>
             <input
               type="text"
-              className="form-control"
-              id="name"
+              placeholder="Enter Name"
+              className=" mt-2 form-control border-0 border-bottom border-black-1 border-dark  "
               name="name"
-              value={formData.name}
-              onChange={handleFormDataChange}
+              id="name"
+              value={name}
               required
+              onChange={handleNameChange}
             />
           </div>
+
           <div className="mb-3">
-            <label htmlFor="type" className="form-label">
-              Email
+            <label htmlFor="email" className="form-label">
+              <b style={{ color: "#7C6A46" }}>Email</b>
             </label>
             <input
-              type="text"
-              className="form-control"
-              id="email"
+              type="email"
+              placeholder="Enter Email"
+              className="mt-2 form-control border-0 border-bottom border-black-1 border-dark"
               name="email"
-              value={formData.email}
-              onChange={handleFormDataChange}
+              id="email"
+              value={email}
               required
+              onChange={handleEmailChange}
             />
           </div>
+
           <div className="mb-3">
-            <label htmlFor="description" className="form-label">
-              Phone number
+            <label htmlFor="phone" className="form-label">
+              <b style={{ color: "#7C6A46" }}>Phone</b>
             </label>
-            <textarea
-              className="form-control"
-              id="phone"
+            <input
+              type="tel"
+              placeholder="Enter Phone"
+              className=" mt-2 form-control border-0 border-bottom border-black-1 border-dark"
               name="phone"
-              value={formData.phone}
-              onChange={handleFormDataChange}
+              id="phone"
+              value={phone}
               required
-            ></textarea>
+              onChange={handlePhoneChange}
+            />
           </div>
+
           <div className="mb-3">
-            <label htmlFor="price" className="form-label">
-              Role
+            <label htmlFor="password" className="form-label">
+              <b style={{ color: "#7C6A46" }}>Password</b>
             </label>
             <input
-              type="text"
-              className="form-control"
-              id="role"
+              type="password"
+              placeholder="Enter Password "
+              className=" mt-2 form-control border-0 border-bottom border-black-1 border-dark"
+              name="password"
+              minLength={8}
+              id="password"
+              required
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="role" className="form-label">
+              <b style={{ color: "#7C6A46" }}>Role</b>
+            </label>
+            <select
+              className=" mt-2 form-select border-0 border-bottom border-black-1 border-dark"
               name="role"
-              value={formData.role}
-              onChange={handleFormDataChange}
+              id="role"
               required
-            />
+              value={role}
+              onChange={handleRoleChange}
+              style={{ width: "100%" }}
+            >
+              <option value="">Select Role</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
           </div>
+
           <div className="mb-3">
-            <label htmlFor="image" className="form-label">
-              Avatar
+            <label htmlFor="create_by" className="form-label">
+              <b style={{ color: "#7C6A46" }}>Create By</b>
             </label>
-            <input
-              type="file"
-              className="form-control"
-              id="image"
-              name="image"
-              onChange={handleFormDataChange}
+            <select
+              className=" mt-2 form-select border-0 border-bottom border-black-1 border-dark"
+              name="create_by"
+              id="create_by"
               required
-            />
+              value={create_by}
+              onChange={handleCreateByChange}
+              style={{ width: "100%" }}
+            >
+              <option value="">Select Creator</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
           </div>
-          <button type="submit" className="btn btn-primary">
-            Create User
+          <button
+            type="submit"
+            className=" mt-3 btn btn-dark w-100"
+            style={{ backgroundColor: "#7C6A46", height: "45px" }}
+          >
+            Create
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
-}
+};
+
+export default CreateUser;
