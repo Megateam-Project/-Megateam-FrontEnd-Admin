@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import baseApi from "../../../shared/services/base.api";
-import { BASE_URL } from "../../../shared/constants/constants.js";
+import axios from "axios";
 
 export function EditRoom() {
-  const { id } = useParams();
+  const { roomId } = useParams();
   const [formData, setFormData] = useState({
     name: "",
     type: "",
@@ -14,8 +14,9 @@ export function EditRoom() {
     convenient: "",
     number: "",
     discount: "",
-    create_by: "admin",
+    update_by: "admin",
   });
+  const [originalData, setOriginalData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -24,19 +25,28 @@ export function EditRoom() {
     const fetchRoom = async () => {
       setLoading(true);
       try {
-        const response = await baseApi.getApi(BASE_URL + `rooms/${id}`);
-        setFormData({
-          ...response,
-          image: null, // Đặt hình ảnh thành null để người dùng có thể cập nhật ảnh mới
-        });
+        const response = await baseApi.getApi(`rooms/${roomId}`);
+        if (response) {
+          setFormData({
+            ...response,
+            image: null,
+          });
+          setOriginalData(response);
+        } else {
+          setError("Failed to fetch room data. Please try again later.");
+        }
       } catch (err) {
         setError("Failed to fetch room data. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
-    fetchRoom();
-  }, [id]);
+    if (roomId) {
+      fetchRoom();
+    } else {
+      setError("Room ID is not provided.");
+    }
+  }, [roomId]);
 
   const handleFormDataChange = (e) => {
     const { name, value, files } = e.target;
@@ -57,17 +67,38 @@ export function EditRoom() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
     try {
-      const formDataToSend = new FormData();
+      const updatedData = {};
       for (const key in formData) {
-        formDataToSend.append(key, formData[key]);
+        if (formData[key] !== originalData[key] || key !== "image") {
+          updatedData[key] = formData[key];
+        } else {
+          updatedData[key] = originalData[key];
+        }
       }
-      await baseApi.putApi(BASE_URL + `rooms/${id}`, formDataToSend);
-      setLoading(false);
-      navigate("/rooms");
+      // var object = {};
+      // formData.forEach(function (value, key) {
+      //   object[key] = value;
+      // });
+      // var json = JSON.stringify(object);
+      console.log(formData);
+      formData["update_by"] = "admin"
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/rooms/${roomId}`,
+        formData
+      );
+      // const response = await axios.put
+
+      if (response) {
+        navigate("/rooms");
+      } else {
+        setError("Failed to update room. Please try again later.");
+      }
     } catch (error) {
       console.error("Error updating room:", error);
       setError("Failed to update room. Please try again later.");
+    } finally {
       setLoading(false);
     }
   };

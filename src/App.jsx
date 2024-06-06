@@ -25,6 +25,7 @@ function App() {
                 <Route path="/rooms" element={<IndexRoom />} />
                 <Route path="/rooms/create" element={<CreateRoomForm />} />
                 <Route path="/rooms/edit/:roomId" element={<EditRoom />} />
+                
                 {/* Add other routes here as needed */}
               </Routes>
             </div>

@@ -13,6 +13,7 @@ export function IndexRoom() {
     const fetchData = async () => {
       try {
         const response = await baseApi.getApi("rooms");
+        console.log(response);
         setRooms(response);
       } catch (err) {
         setError(err.message);
@@ -106,7 +107,7 @@ export function IndexRoom() {
       type: room.type,
       description: room.description,
       price: room.price,
-      image: room.image,
+      image: `http://127.0.0.1:8000/${room.image}`,
       convenient: room.convenient,
       number: room.number,
       discount: room.discount,
