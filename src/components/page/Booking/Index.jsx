@@ -37,6 +37,10 @@ export function Content() {
       selector: (row) => row.room.price,
     },
     {
+      name: "Payment Method",
+      selector: (row) => row.payment.payment_method,
+    },
+    {
       name: "Check in date",
       selector: (row) => row.check_in_date,
     },
@@ -68,6 +72,9 @@ export function Content() {
       room: {
         number: booking.room.number,
         price: booking.room.price,
+      },
+      payment:{
+        payment_method:booking.payment.payment_method,
       },
       check_in_date: booking.check_in_date,
       check_out_date: booking.check_out_date,

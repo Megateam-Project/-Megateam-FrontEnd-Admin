@@ -26,7 +26,7 @@ export function IndexUser() {
       name: "Avatar",
       cell: (row) => (
         <img
-          src={row.image}
+          src={row.avatar}
           alt={row.name}
           style={{ width: "100px", height: "auto" }}
         />

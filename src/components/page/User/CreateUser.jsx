@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import baseApi from "../../../shared/services/base.api";
+import axios from "axios";
 // import { Link } from "react-router-dom";
 const CreateUser = () => {
   const [name, setName] = useState("");
@@ -13,38 +14,38 @@ const CreateUser = () => {
   const navigate = useNavigate();
 
   const handleNameChange = (e) => {
-    console.log(e);
+    console.log(e.target.value);
     setName(e.target.value);
   };
   const handleEmailChange = (e) => {
-    console.log(e);
+    console.log(e.target.value);
     setEmail(e.target.value);
   };
   const handlePasswordChange = (e) => {
-    console.log(e);
+    console.log(e.target.value);
     setPassword(e.target.value);
   };
   const handlePhoneChange = (e) => {
-    console.log(e);
+    console.log(e.target.value);
     setPhone(e.target.value);
   };
   const handleRoleChange = (e) => {
-    console.log(e);
+    console.log(e.target.value);
     setRole(e.target.value);
   };
   const handleCreateByChange = (e) => {
-    console.log(e);
+    console.log(e.target.value);
     setCreateBy(e.target.value);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await baseApi.postApi("users", {name,
+        const response = await axios.post("http://127.0.0.1:8000/api/users",{name,
         email,
         phone,
         password,
         role,
-        create_by,});
+        create_by,})
       alert("Create successful");
       navigate("/users");
     } catch (error) {

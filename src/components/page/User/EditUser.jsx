@@ -39,13 +39,13 @@ export function EditUser() {
           <h3 className="text-center mt-2 mb-4">Edit User</h3>
           <div>
             {userArr.map((userInfo) => (
-              <React.Fragment key={userInfo.id}>
+              <React.Fragment key={userInfo?.id}>
                 <Form.Item
                   label="User name"
                   labelCol={{ span: 4 }}
                   wrapperCol={{ span: 20 }}
                   name="user_name"
-                  initialValue={userInfo.user.name}
+                  initialValue={userInfo?.user?.name}
                 >
                   <Input />
                 </Form.Item>
@@ -54,7 +54,7 @@ export function EditUser() {
                   labelCol={{ span: 4 }}
                   wrapperCol={{ span: 20 }}
                   name="email"
-                  initialValue={userInfo.user.email}
+                  initialValue={userInfo?.user?.email}
                 >
                   <Input />
                 </Form.Item>
@@ -63,7 +63,7 @@ export function EditUser() {
                   labelCol={{ span: 4 }}
                   wrapperCol={{ span: 20 }}
                   name="phone_number"
-                  initialValue={userInfo.user.phone}
+                  initialValue={userInfo?.user?.phone}
                 >
                   <Input />
                 </Form.Item>
@@ -72,7 +72,7 @@ export function EditUser() {
                   label="Update By"
                   labelCol={{ span: 4 }}
                   wrapperCol={{ span: 20 }}
-                  initialValue={userInfo.update_by}
+                  initialValue={userInfo?.update_by}
                 >
                   <Select placeholder="select">
                     <Option value="admin">Admin</Option>
