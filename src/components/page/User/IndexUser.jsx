@@ -50,13 +50,28 @@ export function IndexUser() {
           >
             <EditOutlined />
           </Link>
-          <Link to="/delete" className="btn btn-danger btn-sm">
+          <button
+            onClick={() => handleDelete(row.id)}
+            className="btn btn-danger btn-sm"
+          >
             <DeleteFilled />
-          </Link>
+          </button>
         </div>
       ),
     },
   ];
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this room?")) {
+      try {
+        await baseApi.deleteApi(`Users/${id}`);
+        setUsers(users.filter((user) => user.id !== id));
+      } catch (err) {
+        alert("Error deleting user: " + err.message);
+      }
+    }
+  };
+
   const transformData = (data) => {
     if(!data) return ''
     return data?.map((userInfo) => ({

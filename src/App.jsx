@@ -30,7 +30,6 @@ function App() {
                 <Route path="/users" element={<IndexUser />} />
                 <Route path="/users/create" element={<CreateUser />} />
                 <Route path="/users/edit/:userId" element={<EditUser />} />
-                {/* Add other routes here as needed */}
               </Routes>
             </div>
           </div>

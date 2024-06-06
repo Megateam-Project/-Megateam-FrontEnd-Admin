@@ -2,17 +2,28 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import baseApi from "../../../shared/services/base.api";
 import DataTable from "react-data-table-component";
-import {PlusOutlined, EditOutlined, DeleteFilled } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteFilled } from "@ant-design/icons";
 
 export function IndexRoom() {
   const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await baseApi.getApi("rooms");
-      setRooms(response);
+      try {
+        const response = await baseApi.getApi("rooms");
+        console.log(response);
+        setRooms(response);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
+
   const columns = [
     {
       name: "ID",
@@ -67,13 +78,28 @@ export function IndexRoom() {
           >
             <EditOutlined />
           </Link>
-          <Link to="/delete" className="btn btn-danger btn-sm">
+          <button
+            onClick={() => handleDelete(row.id)}
+            className="btn btn-danger btn-sm"
+          >
             <DeleteFilled />
-          </Link>
+          </button>
         </div>
       ),
     },
   ];
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this room?")) {
+      try {
+        await baseApi.deleteApi(`rooms/${id}`);
+        setRooms(rooms.filter((room) => room.id !== id));
+      } catch (err) {
+        alert("Error deleting room: " + err.message);
+      }
+    }
+  };
+
   const transformData = (data) => {
     return data.map((room) => ({
       id: room.id,
@@ -81,13 +107,23 @@ export function IndexRoom() {
       type: room.type,
       description: room.description,
       price: room.price,
-      image: room.image,
+      image: `http://127.0.0.1:8000/${room.image}`,
       convenient: room.convenient,
       number: room.number,
       discount: room.discount,
     }));
   };
+
   const data = transformData(rooms);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div>
       <h2 className="m-3 title">MANAGE ROOM</h2>
@@ -103,4 +139,3 @@ export function IndexRoom() {
     </div>
   );
 }
-
