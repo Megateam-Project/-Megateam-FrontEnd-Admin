@@ -1,5 +1,5 @@
 // import { redirect } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { BASE_URL } from "./../constants/constants";
 const postApi = async (url, body) => {
   try {
@@ -29,7 +29,6 @@ const putApi = async (url, body) => {
     };
     console.log(url, body);
     const response = await fetch(url, requestOptions);
-
     const data = await response.json();
     return data;
   } catch (error) {

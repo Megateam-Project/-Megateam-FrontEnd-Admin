@@ -10,7 +10,7 @@ import { IndexRoom } from "./components/page/Room/IndexRoom";
 import { CreateRoomForm } from "./components/page/Room/CreateRoomForm";
 import { EditRoom } from "./components/page/Room/EditRoom";
 import { IndexUser } from "./components/page/User/IndexUser";
-import { CreateUser } from "./components/page/User/CreateUser";
+import CreateUser  from "./components/page/User/CreateUser";
 import { EditUser } from "./components/page/User/EditUser";
 function App() {
   return (
@@ -27,10 +27,9 @@ function App() {
                 <Route path="/rooms" element={<IndexRoom />} />
                 <Route path="/rooms/create" element={<CreateRoomForm />} />
                 <Route path="/rooms/edit/:roomId" element={<EditRoom />} />
-                <Route path="/users" element={<IndexUser/>} />
+                <Route path="/users" element={<IndexUser />} />
                 <Route path="/users/create" element={<CreateUser />} />
                 <Route path="/users/edit/:userId" element={<EditUser />} />
-                {/* Add other routes here as needed */}
               </Routes>
             </div>
           </div>

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import baseApi from "../../../shared/services/base.api";
 import axios from "axios";
-import qs from 'qs';
 
 export function EditRoom() {
   const { roomId } = useParams();
@@ -72,25 +71,26 @@ export function EditRoom() {
     try {
       const updatedData = {};
       for (const key in formData) {
-        if (formData[key] !== originalData[key] || key === "image") {
+        if (formData[key] !== originalData[key] || key !== "image") {
           updatedData[key] = formData[key];
+        } else {
+          updatedData[key] = originalData[key];
         }
       }
-      updatedData.update_by = "admin";
-
-      const urlEncodedData = qs.stringify(updatedData);
-      
+      // var object = {};
+      // formData.forEach(function (value, key) {
+      //   object[key] = value;
+      // });
+      // var json = JSON.stringify(object);
+      console.log(formData);
+      formData["update_by"] = "admin"
       const response = await axios.put(
         `http://127.0.0.1:8000/api/rooms/${roomId}`,
-        urlEncodedData,
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
+        formData
       );
+      // const response = await axios.put
 
-      if (response.status === 200) {
+      if (response) {
         navigate("/rooms");
       } else {
         setError("Failed to update room. Please try again later.");
