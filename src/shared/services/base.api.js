@@ -27,7 +27,8 @@ const putApi = async (url, body) => {
       redirect: "follow",
       body: body,
     };
-    const response = await axios(url, requestOptions);
+    console.log(url, body);
+    const response = await fetch(url, requestOptions);
 
     const data = await response.json();
     return data;
@@ -46,14 +47,13 @@ const getApi = async (url) => {
   return response;
 };
 const getDetailApi = async (url) => {
-    const requestOptions = {
-        method: "GET",
-        redirect: "follow",
-    };
-    const response = await baseRequest(url, requestOptions);
-    return response;
-    
-}
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+  const response = await baseRequest(url, requestOptions);
+  return response;
+};
 
 const deleteApi = async (url) => {
   const requestOptions = {

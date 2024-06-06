@@ -8,14 +8,10 @@ import { Sidebar } from "./components/layouts/Sidebar";
 import { Edit } from "./components/page/Booking/Edit";
 import { IndexRoom } from "./components/page/Room/IndexRoom";
 import { CreateRoomForm } from "./components/page/Room/CreateRoomForm";
-// import { EditRoom } from "./components/page/Room/EditRoom";
-
-
-import { Content_User } from './components/page/User/IndexUser';
-import { Create_User } from './components/page/User/CreateUser';
-import { Edit_User } from './components/page/User/EditUser';
-
-
+import { EditRoom } from "./components/page/Room/EditRoom";
+import { IndexUser } from "./components/page/User/IndexUser";
+import { CreateUser } from "./components/page/User/CreateUser";
+import { EditUser } from "./components/page/User/EditUser";
 function App() {
   return (
     <Router>
@@ -27,14 +23,13 @@ function App() {
             <div className="row">
               <Routes>
                 <Route path="/bookings" element={<Content />} />
-                {/* <Route path="/bookings/create" element={<Create />} /> */}
                 <Route path="/bookings/edit/:bookingId" element={<Edit />} />
                 <Route path="/rooms" element={<IndexRoom />} />
                 <Route path="/rooms/create" element={<CreateRoomForm />} />
-                {/* <Route path="/rooms/edit/:roomId" element={<EditRoom />} /> */}
-                <Route path="/users" element={<Content_User/>} />
-                <Route path="/users/create" element={<Create_User />} />
-                <Route path="/users/edit/:userId" element={<Edit_User />} />
+                <Route path="/rooms/edit/:roomId" element={<EditRoom />} />
+                <Route path="/users" element={<IndexUser/>} />
+                <Route path="/users/create" element={<CreateUser />} />
+                <Route path="/users/edit/:userId" element={<EditUser />} />
                 {/* Add other routes here as needed */}
               </Routes>
             </div>

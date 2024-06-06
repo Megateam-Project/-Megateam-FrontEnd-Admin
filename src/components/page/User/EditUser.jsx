@@ -1,37 +1,26 @@
-import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Form, Input, Select, Button, message } from "antd";
-import baseApi from "./../../../shared/services/base.api";
+import { Form, Button, Input, Select } from "antd";
+import baseApi from "../../../shared/services/base.api";
 
-const { Option } = Select;
-
-export function Edit_User() {
+export function EditUser() {
+  const { Option } = Select;
   const { userId } = useParams();
-  const navigate = useNavigate();
-  const [user, setUser] = useState({});
-  const [form] = Form.useForm();
+  const [users, setUsers] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await baseApi.getDetailApi(`users/${userId}`);
-        setUser(response);
-        form.setFieldsValue(response);
-      } catch (error) {
-        message.error('Failed to fetch user details');
-      }
+      const response = await baseApi.getDetailApi(`users/${userId}`);
+      setUsers(response);
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
-  const onFinish = async (values) => {
-    try {
-      await baseApi.updateApi(`users/${userId}`, values);
-      message.success('User updated successfully');
-      navigate('/users');
-    } catch (error) {
-      message.error('Failed to update user');
-    }
+  const userArr = Object.values(users);
+
+  const handleFinish = (values) => {
+    console.log(values);
   };
 
   return (
@@ -44,46 +33,55 @@ export function Edit_User() {
       </div>
       <div className="d-flex flex-column justify-content-between align-items-center">
         <Form
-          form={form}
           className="rounded border border-danger-subtle w-50 p-3"
-          initialValues={{
-            name: user.name,
-            email: user.email,
-            role: user.role,
-          }}
-          onFinish={onFinish}
+          onFinish={handleFinish}
         >
-          <h3 className="text-center mt-2 mb-4">Edit user</h3>
-          <Form.Item
-            label="User name"
-            name="name"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            rules={[{ required: true, message: 'Please input the user name!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            rules={[{ required: true, message: 'Please input the email!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="role"
-            label="Role"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            rules={[{ required: true, message: 'Please select a role!' }]}
-          >
-            <Select placeholder="Select">
-              <Option value="admin">Admin</Option>
-              <Option value="user">User</Option>
-            </Select>
-          </Form.Item>
+          <h3 className="text-center mt-2 mb-4">Edit User</h3>
+          <div>
+            {userArr.map((userInfo) => (
+              <React.Fragment key={userInfo?.id}>
+                <Form.Item
+                  label="User name"
+                  labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 20 }}
+                  name="user_name"
+                  initialValue={userInfo?.user?.name}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="email"
+                  labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 20 }}
+                  name="email"
+                  initialValue={userInfo?.user?.email}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="Phone number"
+                  labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 20 }}
+                  name="phone_number"
+                  initialValue={userInfo?.user?.phone}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="update_by"
+                  label="Update By"
+                  labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 20 }}
+                  initialValue={userInfo?.update_by}
+                >
+                  <Select placeholder="select">
+                    <Option value="admin">Admin</Option>
+                    <Option value="user">User</Option>
+                  </Select>
+                </Form.Item>
+              </React.Fragment>
+            ))}
+          </div>
           <Form.Item wrapperCol={{ offset: 10, span: 10 }}>
             <Button type="primary" htmlType="submit">
               Update

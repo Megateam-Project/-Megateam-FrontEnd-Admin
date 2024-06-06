@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import baseApi from "./../../../shared/services/base.api";
+import baseApi from "../../../shared/services/base.api";
 import DataTable from "react-data-table-component";
-import {PlusOutlined, EditOutlined, DeleteFilled } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteFilled } from "@ant-design/icons";
 
-
-export function Content_User() {
+export function IndexUser() {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +21,6 @@ export function Content_User() {
     {
       name: "User Name",
       selector: (row) => row.name,
-     
     },
     {
       name: "Avatar",
@@ -46,40 +44,57 @@ export function Content_User() {
       name: "Action",
       cell: (row) => (
         <div className="d-flex">
-          <Link to={`/users/edit/${row.id}`} className="mx-3 btn btn-warning btn-sm">
+          <Link
+            to={`/users/edit/${row.id}`}
+            className="mx-3 btn btn-warning btn-sm"
+          >
             <EditOutlined />
           </Link>
-          <Link to="/delete" className="btn btn-danger btn-sm">
-          <DeleteFilled />
-          </Link>
+          <button
+            onClick={() => handleDelete(row.id)}
+            className="btn btn-danger btn-sm"
+          >
+            <DeleteFilled />
+          </button>
         </div>
       ),
     },
   ];
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this room?")) {
+      try {
+        await baseApi.deleteApi(`Users/${id}`);
+        setUsers(users.filter((user) => user.id !== id));
+      } catch (err) {
+        alert("Error deleting user: " + err.message);
+      }
+    }
+  };
+
   const transformData = (data) => {
-    return data.map(user => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      role: user.role,
+    if(!data) return ''
+    return data?.map((userInfo) => ({
+      id: userInfo.id,
+      name: userInfo.name,
+      avatar: userInfo.avatar,
+      email: userInfo.email,
+      role: userInfo.role,
     }));
   };
   const data = transformData(users);
   return (
     <div>
       <h2 className="m-3 title">MANAGE USER</h2>
-        <h5 style={{ marginLeft: '20px' }}>
-          ADD USER{" "}
-          <Link to="/users/create" className="mx-3 btn btn-success btn-sm">
-            <PlusOutlined />
-          </Link>
-        </h5>
+      <h5 style={{ marginLeft: 20 }}>
+        ADD USER{" "}
+        <Link to="/users/create" className="mx-3 btn btn-success btn-sm">
+          <PlusOutlined />
+        </Link>
+      </h5>
       <div className="tableBooking mt-3">
-      <DataTable columns={columns} data={data} pagination />
+        <DataTable columns={columns} data={data} pagination />
       </div>
     </div>
   );
 }
-
-

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import baseApi from "../../../shared/services/base.api";
 import { Link, useNavigate } from "react-router-dom";
+import baseApi from "../../../shared/services/base.api";
 import { BASE_URL } from "../../../shared/constants/constants.js";
 
 export function CreateRoomForm() {
@@ -15,6 +15,7 @@ export function CreateRoomForm() {
     discount: "",
     create_by: "admin",
   });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -32,30 +33,25 @@ export function CreateRoomForm() {
       }));
     }
   };
-  
+
   const handleCreate = async (e) => {
-  e.preventDefault();
-  try {
-    const formDataToSend = new FormData();
-    if (formData.image) {
-      formDataToSend.append("image", formData.image);
-      const imageUrl = URL.createObjectURL(formData.image);
-      setFormData((prevData) => ({
-        ...prevData,
-        image: imageUrl,
-      }));
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const formDataToSend = new FormData();
+      for (const key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
+      await baseApi.postApi(BASE_URL + "rooms", formDataToSend);
+      setLoading(false);
+      navigate("/rooms");
+    } catch (error) {
+      console.error("Error creating room:", error);
+      setError("Failed to create room. Please try again later.");
+      setLoading(false);
     }
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
-    }
-    await baseApi.postApi(BASE_URL + "rooms", formDataToSend);
-    console.log(formData);
-    navigate("/rooms");
-  } catch (error) {
-    console.error("Error creating room:", error);
-    setError("Failed to create room. Please try again later.");
-  }
-};
+  };
 
   return (
     <div>
@@ -186,11 +182,11 @@ export function CreateRoomForm() {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary">
-            Create Room
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? "Creating..." : "Create Room"}
           </button>
         </form>
       </div>
     </div>
-  );  
+  );
 }
