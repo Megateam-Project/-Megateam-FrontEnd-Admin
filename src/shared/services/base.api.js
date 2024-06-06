@@ -1,4 +1,5 @@
 // import { redirect } from "react-router-dom";
+import axios from "axios";
 import { BASE_URL } from "./../constants/constants";
 const postApi = async (url, body) => {
   try {
@@ -26,7 +27,7 @@ const putApi = async (url, body) => {
       redirect: "follow",
       body: body,
     };
-    const response = await fetch(url, requestOptions);
+    const response = await axios(url, requestOptions);
 
     const data = await response.json();
     return data;

@@ -14,7 +14,7 @@ export function Create_User() {
       </div>
       <div className="d-flex flex-column justify-content-between align-items-center">
         <form className="rounded border border-danger-subtle w-50 p-3">
-          <h3 className="text-center mt-2 mb-4">Edit USER</h3>
+          <h3 className="text-center mt-2 mb-4">ADD USER</h3>
           <Form.Item
             label="Name"
             labelCol={{ span: 4 }}  

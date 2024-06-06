@@ -21,26 +21,26 @@ export function Content_User() {
     },
     {
       name: "User Name",
-      selector: (row) => row.user.name,
+      selector: (row) => row.name,
      
     },
     {
-      name: "Avata",
+      name: "Avatar",
       cell: (row) => (
         <img
-          src={row.user.image}
-          alt={row.user.name}
+          src={row.avatar}
+          alt={row.name}
           style={{ width: "100px", height: "auto" }}
         />
       ),
     },
     {
       name: "Email",
-      selector: (row) => row.user.email,
+      selector: (row) => row.email,
     },
     {
       name: "Role",
-      selector: (row) => row.user.role,
+      selector: (row) => row.role,
     },
     {
       name: "Action",
@@ -61,7 +61,7 @@ export function Content_User() {
       id: user.id,
       name: user.name,
       email: user.email,
-      avatar: user.image,
+      avatar: user.avatar,
       role: user.role,
     }));
   };
