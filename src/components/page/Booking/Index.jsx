@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import baseApi from "./../../../shared/services/base.api";
 import DataTable from "react-data-table-component";
-import {EditOutlined, DeleteFilled} from "@ant-design/icons";
+import { EditOutlined, DeleteFilled } from "@ant-design/icons";
+import axios from "axios";
 
 export function Content() {
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       const response = await baseApi.getApi("bookings");
@@ -13,6 +15,15 @@ export function Content() {
     };
     fetchData();
   }, []);
+  const deleteBooking = async (id) => {
+    const res = await baseApi.deleteApi(id);
+    if (res.status !==200){
+      alert("Booking not found");
+      return;
+    }
+    alert("Delete OK !!!");
+    navigate("/bookings");
+  };
   const columns = [
     {
       name: "ID",
@@ -21,7 +32,6 @@ export function Content() {
     {
       name: "User Name",
       selector: (row) => row.user.name,
-     
     },
     {
       name: "Phone",
@@ -37,10 +47,6 @@ export function Content() {
       selector: (row) => row.room.price,
     },
     {
-      name: "Payment Method",
-      selector: (row) => row.payment.payment_method,
-    },
-    {
       name: "Check in date",
       selector: (row) => row.check_in_date,
     },
@@ -52,18 +58,24 @@ export function Content() {
       name: "Action",
       cell: (row) => (
         <div className="d-flex">
-          <Link to={`/bookings/edit/${row.id}`} className="mx-3 btn btn-warning btn-sm">
+          <Link
+            to={`/bookings/edit/${row.id}`}
+            className="mx-3 btn btn-warning btn-sm"
+          >
             <EditOutlined />
           </Link>
-          <Link to="/delete" className="btn btn-danger btn-sm">
-          <DeleteFilled />
-          </Link>
+          <button
+            onClick={() => deleteBooking(row.id)}
+            className="btn btn-danger btn-sm"
+          >
+            <DeleteFilled />
+          </button>
         </div>
       ),
     },
   ];
   const transformData = (data) => {
-    return data.map(booking => ({
+    return data.map((booking) => ({
       id: booking.id,
       user: {
         name: booking.user.name,
@@ -72,9 +84,6 @@ export function Content() {
       room: {
         number: booking.room.number,
         price: booking.room.price,
-      },
-      payment:{
-        payment_method:booking.payment.payment_method,
       },
       check_in_date: booking.check_in_date,
       check_out_date: booking.check_out_date,
@@ -85,7 +94,7 @@ export function Content() {
     <div>
       <h2 className="m-3 title">MANAGE BOOKING</h2>
       <div className="tableBooking mt-3">
-      <DataTable columns={columns} data={data} pagination />
+        <DataTable columns={columns} data={data} pagination />
       </div>
     </div>
   );
