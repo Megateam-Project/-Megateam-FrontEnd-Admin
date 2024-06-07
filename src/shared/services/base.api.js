@@ -1,5 +1,3 @@
-// import { redirect } from "react-router-dom";
-// import axios from "axios";
 import { BASE_URL } from "./../constants/constants";
 const postApi = async (url, body) => {
   try {

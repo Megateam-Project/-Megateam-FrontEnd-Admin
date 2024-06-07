@@ -1,93 +1,203 @@
-import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Form, Button, Input, Select } from "antd";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import baseApi from "../../../shared/services/base.api";
+import axios from "axios";
 
 export function EditUser() {
-  const { Option } = Select;
   const { userId } = useParams();
-  const [users, setUsers] = useState([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    avatar: null,
+    role: "",
+    update_by: "admin",
+  });
+  const [originalData, setOriginalData] = useState({});
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await baseApi.getDetailApi(`users/${userId}`);
-      setUsers(response);
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        const response = await baseApi.getApi(`users/${userId}`);
+        if (response) {
+          setFormData({
+            ...response,
+            avatar: null,
+          });
+          setOriginalData(response);
+        } else {
+          setError("Failed to fetch user data. Please try again later.");
+        }
+      } catch (err) {
+        setError("Failed to fetch user data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchData();
+    if (userId) {
+      fetchUser();
+    } else {
+      setError("User ID is not provided.");
+    }
   }, [userId]);
 
-  const userArr = Object.values(users);
+  const handleFormDataChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "avatar") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
 
-  const handleFinish = (values) => {
-    console.log(values);
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const updatedData = {};
+      for (const key in formData) {
+        if (formData[key] !== originalData[key] || key !== "avatar") {
+          updatedData[key] = formData[key];
+        } else {
+          updatedData[key] = originalData[key];
+        }
+      }
+
+      const formDataToSend = new FormData();
+      for (const key in updatedData) {
+        formDataToSend.append(key, updatedData[key]);
+      }
+
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/users/${userId}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        navigate("/users");
+      } else {
+        setError("Failed to update user. Please try again later.");
+      }      
+    } catch (error) {
+      console.error("Error updating user:", error);
+      setError("Failed to update user. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div>
       <h2 className="mt-3 text-center title">MANAGE USER</h2>
       <div className="buttonBack m-3">
-        <Link to="/users" className="btn btn-secondary mx-3">
-          Back <ArrowLeftOutlined />
-        </Link>
+        <button
+          onClick={() => navigate("/users")}
+          className="btn btn-secondary mx-3"
+        >
+          Back
+        </button>
       </div>
       <div className="d-flex flex-column justify-content-between align-items-center">
-        <Form
-          className="rounded border border-danger-subtle w-50 p-3"
-          onFinish={handleFinish}
-        >
-          <h3 className="text-center mt-2 mb-4">Edit User</h3>
-          <div>
-            {userArr.map((userInfo) => (
-              <React.Fragment key={userInfo?.id}>
-                <Form.Item
-                  label="User name"
-                  labelCol={{ span: 4 }}
-                  wrapperCol={{ span: 20 }}
-                  name="user_name"
-                  initialValue={userInfo?.user?.name}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="email"
-                  labelCol={{ span: 4 }}
-                  wrapperCol={{ span: 20 }}
-                  name="email"
-                  initialValue={userInfo?.user?.email}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Phone number"
-                  labelCol={{ span: 4 }}
-                  wrapperCol={{ span: 20 }}
-                  name="phone_number"
-                  initialValue={userInfo?.user?.phone}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name="update_by"
-                  label="Update By"
-                  labelCol={{ span: 4 }}
-                  wrapperCol={{ span: 20 }}
-                  initialValue={userInfo?.update_by}
-                >
-                  <Select placeholder="select">
-                    <Option value="admin">Admin</Option>
-                    <Option value="user">User</Option>
-                  </Select>
-                </Form.Item>
-              </React.Fragment>
-            ))}
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
           </div>
-          <Form.Item wrapperCol={{ offset: 10, span: 10 }}>
-            <Button type="primary" htmlType="submit">
-              Update
-            </Button>
-          </Form.Item>
-        </Form>
+        )}
+        <form
+          className="rounded border border-danger-subtle w-50 p-3"
+          onSubmit={handleUpdate}
+        >
+          <h3 className="text-center mt-2 mb-4">User Information</h3>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleFormDataChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleFormDataChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="phone" className="form-label">
+              Phone
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleFormDataChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleFormDataChange}
+              required
+            />
+          </div>
+          {/* <div className="mb-3">
+            <label htmlFor="avatar" className="form-label">
+              Avatar
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              id="avatar"
+              name="avatar"
+              onChange={handleFormDataChange}
+            />
+          </div> */}
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? "Updating..." : "Update User"}
+          </button>
+        </form>
       </div>
     </div>
   );
