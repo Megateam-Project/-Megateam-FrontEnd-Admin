@@ -83,7 +83,7 @@ export function EditRoom() {
       // });
       // var json = JSON.stringify(object);
       console.log(formData);
-      formData["update_by"] = "admin"
+      formData["update_by"] = "admin";
       const response = await axios.put(
         `http://127.0.0.1:8000/api/rooms/${roomId}`,
         formData
