@@ -9,7 +9,6 @@ export function EditUser() {
     name: "",
     email: "",
     phone: "",
-    password: "",
     avatar: null,
     role: "",
     update_by: "admin",
@@ -169,19 +168,18 @@ export function EditUser() {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">
-              Password
+            <label htmlFor="avatar" className="form-label">
+            avatar
             </label>
             <input
-              type="text"
+              type="file"
               className="form-control"
-              id="password"
-              name="password"
-              value={formData.password}
+              id="avatar"
+              name="avatar"
               onChange={handleFormDataChange}
-              required
             />
           </div>
+          
           {/* <div className="mb-3">
             <label htmlFor="avatar" className="form-label">
               Avatar
