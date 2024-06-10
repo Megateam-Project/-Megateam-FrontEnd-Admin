@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import baseApi from "./../../../shared/services/base.api";
 import DataTable from "react-data-table-component";
 import { EditOutlined, DeleteFilled } from "@ant-design/icons";
-import axios from "axios";
-
 export function Content() {
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
@@ -16,11 +14,7 @@ export function Content() {
     fetchData();
   }, []);
   const deleteBooking = async (id) => {
-    const res = await baseApi.deleteApi(id);
-    if (res.status !==200){
-      alert("Booking not found");
-      return;
-    }
+    const res = await baseApi.deleteApi(`bookings/${id}`);
     alert("Delete OK !!!");
     navigate("/bookings");
   };

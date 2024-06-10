@@ -76,7 +76,7 @@ export function Edit() {
     console.log(e);
     setPaymentMethod(e);
   };
-
+  const sortedRooms = rooms.sort((a, b) => a.number - b.number);
   const handleUpdateBooking = async () => {
     try {
       const body = {
@@ -122,11 +122,11 @@ export function Edit() {
                 name="room_id"
               >
                 <Select
-                  defaultValue={number ?? booking?.room?.number}
+                  defaultValue={number ?? booking?.room?.number ?? ""}
                   placeholder="Select room"
                   onChange={handleRoomChange}
                 >
-                  {rooms.map((room) => (
+                  {sortedRooms.map((room) => (
                     <Option key={room.id} value={room.id}>
                       {room.number}
                     </Option>
@@ -142,7 +142,7 @@ export function Edit() {
                 <DatePicker
                   showTime
                   format="YYYY-MM-DD HH:mm:ss"
-                  defaultValue={moment(check_in_date ?? booking?.check_in_date)}
+                  defaultValue={moment(check_in_date ?? booking?.check_in_date ?? "")}
                   onChange={handleCheckInDateChange}
                 />
               </Form.Item>
@@ -156,7 +156,7 @@ export function Edit() {
                   showTime
                   format="YYYY-MM-DD HH:mm:ss"
                   defaultValue={moment(
-                    check_out_date ?? booking?.check_out_date
+                    check_out_date ?? booking?.check_out_date ?? ""
                   )}
                   onChange={handleCheckOutDateChange}
                 />
@@ -169,7 +169,7 @@ export function Edit() {
               >
                 <Select
                   placeholder="select"
-                  defaultValue={update_by ?? booking?.update_by}
+                  defaultValue={update_by ?? booking?.update_by ?? ""}
                   onChange={handleUpdateByChange}
                 >
                   <Option value="admin">Admin</Option>
@@ -183,7 +183,7 @@ export function Edit() {
                 name="payment_id"
               >
                 <Select
-                  defaultValue={booking?.payment_id}
+                  defaultValue={booking?.payment_id ?? ""}
                   placeholder="Select payment method"
                   onChange={handlePaymentMethodChange}
                 >
