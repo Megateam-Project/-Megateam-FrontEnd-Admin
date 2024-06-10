@@ -48,20 +48,21 @@ export function EditRoom() {
     }
   }, [roomId]);
 
-  const handleFormDataChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
+
+  const handleImageChange = (e) => {
+    console.log(e.target.files[0]);
+    setFormData((prevData) => ({
+      ...prevData,
+      image: e.target.files[0],
+    }));
+  };  
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -69,26 +70,26 @@ export function EditRoom() {
     setError(null);
 
     try {
-      const updatedData = {};
+      const updatedData = new FormData();
       for (const key in formData) {
-        if (formData[key] !== originalData[key] || key !== "image") {
-          updatedData[key] = formData[key];
+        if (formData[key] !== originalData[key] || key === "image") {
+          updatedData.append(key, formData[key]);
         } else {
-          updatedData[key] = originalData[key];
+          updatedData.append(key, originalData[key]);
         }
       }
-      // var object = {};
-      // formData.forEach(function (value, key) {
-      //   object[key] = value;
-      // });
-      // var json = JSON.stringify(object);
-      console.log(formData);
-      formData["update_by"] = "admin"
-      const response = await axios.put(
+      updatedData.append("update_by", "admin");
+      updatedData.append("_method", "PUT");
+
+      const response = await axios.post(
         `http://127.0.0.1:8000/api/rooms/${roomId}`,
-        formData
+        updatedData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      // const response = await axios.put
 
       if (response) {
         navigate("/rooms");
@@ -135,7 +136,7 @@ export function EditRoom() {
               id="name"
               name="name"
               value={formData.name}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -149,7 +150,7 @@ export function EditRoom() {
               id="type"
               name="type"
               value={formData.type}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -162,7 +163,7 @@ export function EditRoom() {
               id="description"
               name="description"
               value={formData.description}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             ></textarea>
           </div>
@@ -176,7 +177,7 @@ export function EditRoom() {
               id="price"
               name="price"
               value={formData.price}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -189,7 +190,7 @@ export function EditRoom() {
               className="form-control"
               id="image"
               name="image"
-              onChange={handleFormDataChange}
+              onChange={handleImageChange}
             />
           </div>
           <div className="mb-3">
@@ -202,7 +203,7 @@ export function EditRoom() {
               id="convenient"
               name="convenient"
               value={formData.convenient}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -216,7 +217,7 @@ export function EditRoom() {
               id="number"
               name="number"
               value={formData.number}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -230,7 +231,7 @@ export function EditRoom() {
               id="discount"
               name="discount"
               value={formData.discount}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
