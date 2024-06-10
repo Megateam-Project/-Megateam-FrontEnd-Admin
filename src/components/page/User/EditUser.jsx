@@ -45,19 +45,19 @@ export function EditUser() {
     }
   }, [userId]);
 
-  const handleFormDataChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "avatar") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleAvatarChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      avatar: e.target.files[0],
+    }));
   };
 
   const handleUpdate = async (e) => {
@@ -66,23 +66,20 @@ export function EditUser() {
     setError(null);
 
     try {
-      const updatedData = {};
+      const updatedData = new FormData();
       for (const key in formData) {
-        if (formData[key] !== originalData[key] || key !== "avatar") {
-          updatedData[key] = formData[key];
+        if (formData[key] !== originalData[key] || key === "avatar") {
+          updatedData.append(key, formData[key]);
         } else {
-          updatedData[key] = originalData[key];
+          updatedData.append(key, originalData[key]);
         }
       }
+     
+      updatedData.append("_method", "PUT");
 
-      const formDataToSend = new FormData();
-      for (const key in updatedData) {
-        formDataToSend.append(key, updatedData[key]);
-      }
-
-      const response = await axios.put(
+      const response = await axios.post(
         `http://127.0.0.1:8000/api/users/${userId}`,
-        formDataToSend,
+        updatedData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -92,9 +89,10 @@ export function EditUser() {
 
       if (response.status === 200) {
         navigate("/users");
+        alert('update succesfull')
       } else {
         setError("Failed to update user. Please try again later.");
-      }      
+      }
     } catch (error) {
       console.error("Error updating user:", error);
       setError("Failed to update user. Please try again later.");
@@ -135,7 +133,7 @@ export function EditUser() {
               id="name"
               name="name"
               value={formData.name}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -149,7 +147,7 @@ export function EditUser() {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -163,24 +161,11 @@ export function EditUser() {
               id="phone"
               name="phone"
               value={formData.phone}
-              onChange={handleFormDataChange}
+              onChange={handleInputChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="avatar" className="form-label">
-            avatar
-            </label>
-            <input
-              type="file"
-              className="form-control"
-              id="avatar"
-              name="avatar"
-              onChange={handleFormDataChange}
-            />
-          </div>
-          
-          {/* <div className="mb-3">
             <label htmlFor="avatar" className="form-label">
               Avatar
             </label>
@@ -189,9 +174,23 @@ export function EditUser() {
               className="form-control"
               id="avatar"
               name="avatar"
-              onChange={handleFormDataChange}
+              onChange={handleAvatarChange}
             />
-          </div> */}
+          </div>
+          <div className="mb-3">
+            <label htmlFor="role" className="form-label">
+              Role
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? "Updating..." : "Update User"}
           </button>
