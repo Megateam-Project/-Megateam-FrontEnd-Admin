@@ -77,7 +77,7 @@ export function IndexUser() {
     return data?.map((userInfo) => ({
       id: userInfo.id,
       name: userInfo.name,
-      avatar: userInfo.avatar,
+      avatar: `http://127.0.0.1:8000/${userInfo.avatar}`,
       email: userInfo.email,
       role: userInfo.role,
     }));
