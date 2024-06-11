@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import baseApi from "../../../shared/services/base.api";
+//import baseApi from "../../../shared/services/base.api";
 import axios from "axios";
-// import { Link } from "react-router-dom";
 const CreateUser = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,8 +38,9 @@ const CreateUser = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(name,email);
     try {
-        const response = await axios.post("http://127.0.0.1:8000/api/users",{name,
+         await axios.post("http://127.0.0.1:8000/api/users",{name,
         email,
         phone,
         password,

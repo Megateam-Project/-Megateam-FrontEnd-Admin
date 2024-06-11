@@ -62,7 +62,7 @@ export function EditRoom() {
       ...prevData,
       image: e.target.files[0],
     }));
-  };
+  };  
 
   const handleUpdate = async (e) => {
     e.preventDefault();

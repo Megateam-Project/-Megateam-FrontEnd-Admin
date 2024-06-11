@@ -64,7 +64,7 @@ export function IndexUser() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this room?")) {
       try {
-        await baseApi.deleteApi(`Users/${id}`);
+        await baseApi.deleteApi(`users/${id}`);
         setUsers(users.filter((user) => user.id !== id));
       } catch (err) {
         alert("Error deleting user: " + err.message);

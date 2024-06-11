@@ -69,18 +69,21 @@ export function Content() {
     },
   ];
   const transformData = (data) => {
-    return data.map((booking) => ({
-      id: booking.id,
+    return data.map(booking => ({
+      id: booking?.id,
       user: {
-        name: booking.user.name,
-        phone: booking.user.phone,
+        name: booking?.user?.name,
+        phone: booking?.user?.phone,
       },
       room: {
-        number: booking.room.number,
-        price: booking.room.price,
+        number: booking?.room?.number,
+        price: booking?.room?.price,
       },
-      check_in_date: booking.check_in_date,
-      check_out_date: booking.check_out_date,
+      payment:{
+        payment_method:booking?.payment?.payment_method,
+      },
+      check_in_date: booking?.check_in_date,
+      check_out_date: booking?.check_out_date,
     }));
   };
   const data = transformData(bookings);
