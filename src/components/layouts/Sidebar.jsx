@@ -17,7 +17,7 @@ export function Sidebar() {
         </div>
         <ul className="mt-4">
         <li style={{ listStyleType: "none" }} className="mt-4">
-            <a href="/dashboard" style={{ fontSize: "18px" }} className="text-decoration-none text-black" >
+            <a href="/home" style={{ fontSize: "18px" }} className="text-decoration-none text-black" >
               Dashboard
             </a>
           </li>

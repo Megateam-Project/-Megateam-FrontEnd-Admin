@@ -10,6 +10,7 @@ import { EditRoom } from "./components/page/Room/EditRoom";
 import { IndexUser } from "./components/page/User/IndexUser";
 import CreateUser  from "./components/page/User/CreateUser";
 import { EditUser } from "./components/page/User/EditUser";
+import Home from "./components/page/Home/Home";
 function App() {
   return (
     <Router>
@@ -20,6 +21,7 @@ function App() {
             <Navbar />
             <div className="row">
               <Routes>
+                <Route path="/home" element={<Home />} />
                 <Route path="/bookings" element={<Content />} />
                 <Route path="/bookings/edit/:bookingId" element={<Edit />} />
                 <Route path="/rooms" element={<IndexRoom />} />
