@@ -41,11 +41,6 @@ export function Sidebar() {
               Chart
             </a>
           </li>
-          <li style={{ listStyleType: "none" }} className="mt-4">
-            <a href="#" style={{ fontSize: "18px" }} className="text-decoration-none text-black">
-              Profile
-            </a>
-          </li>
         </ul>
       </div>
     </div>
