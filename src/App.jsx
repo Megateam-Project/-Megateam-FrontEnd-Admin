@@ -1,9 +1,7 @@
 import "./App.css";
-import { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import { Content } from "./components/page/Booking/Index";
 import Navbar from "./components/layouts/Header";
-import { Sidebar } from "./components/layouts/Sidebar";
 import { Edit } from "./components/page/Booking/Edit";
 import { IndexRoom } from "./components/page/Room/IndexRoom";
 import { CreateRoomForm } from "./components/page/Room/CreateRoomForm";
@@ -13,8 +11,6 @@ import CreateUser  from "./components/page/User/CreateUser";
 import { EditUser } from "./components/page/User/EditUser";
 import Home from "./components/page/Home/Home";
 import Login  from "./components/page/Login";
-
-
 
 function App() {
   return (
@@ -35,7 +31,6 @@ function App() {
                 <Route path="/users/create" element={<CreateUser />} />
                 <Route path="/users/edit/:userId" element={<EditUser />} />
                 <Route path="/" element={<Login />} />
-
               </Routes>
             </div>
           </div>
@@ -44,6 +39,4 @@ function App() {
     </Router>
   );
 }
-
-
 export default App;
