@@ -19,136 +19,84 @@ import {
 } from "recharts";
 
 import baseApi from "../../../shared/services/base.api";
+
 function Home() {
   const [roomCount, setRoomCount] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [customerCount, setCustomerCount] = useState(0);
   const [billCount, setBillCount] = useState(0);
-    const [topRooms, setTopRooms] = useState([]);
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState(null);
-   useEffect(() => {
-     const fetchRoomCount = async () => {
-       try {
-         const roomResponse = await baseApi.getApi("rooms");
-         const customerResponse = await baseApi.getApi("users");
-         const billResponse = await baseApi.getApi("bills");
-         const bookingResponse = await baseApi.getApi("bookings");
+  const [topRooms, setTopRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-         setRoomCount(roomResponse.length);
-         setCustomerCount(customerResponse.length);
-         setBillCount(billResponse.length);
-         const totalRevenue = billResponse.reduce(
-           (acc, bill) => acc + parseFloat(bill.total_price),
-           0
-         );
-         setTotalRevenue(totalRevenue);
-         // Tính số lần đặt cho mỗi phòng
-          console.log(bookingResponse);
-         const roomBookings = bookingResponse.reduce((acc, booking) => {
-           const roomId = booking.room_id;
-           if (acc[roomId]) {
-             acc[roomId].count += 1;
-           } else {
-             acc[roomId] = { room_id: roomId, count: 1 };
-           }
-           return acc;
-         }, {});
-           console.log(roomBookings);
+  useEffect(() => {
+    const fetchRoomCount = async () => {
+      try {
+        const roomResponse = await baseApi.getApi("rooms");
+        const customerResponse = await baseApi.getApi("users");
+        const billResponse = await baseApi.getApi("bills");
+        const bookingResponse = await baseApi.getApi("bookings");
 
-         // Chuyển đổi object thành mảng và sắp xếp theo số lần đặt giảm dần
-         const sortedRoomBookings = Object.values(roomBookings).sort(
-           (a, b) => b.count - a.count
-         );
+        setRoomCount(roomResponse.length);
+        setCustomerCount(customerResponse.length);
+        setBillCount(billResponse.length);
 
-         // Lấy 10 phòng được đặt nhiều nhất
-         const top10Rooms = sortedRoomBookings
-           .slice(0, 10)
-           .map((roomBooking) => ({
-             room_id: roomBooking.room_id,
-             booking_count: roomBooking.count,
-           }));
-         setTopRooms(top10Rooms);
-         console.log(topRooms);
-       } catch (err) {
-         setError(err.message);
-       } finally {
-         setLoading(false);
-       }
-     };
-     fetchRoomCount();
-   }, []);
+        const totalRevenue = billResponse.reduce(
+          (acc, bill) => acc + parseFloat(bill.total_price),
+          0
+        );
+        setTotalRevenue(totalRevenue);
 
-  const data = [
-    {
-      name: "Room",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Room",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Room",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Room",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Room",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Room",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Room",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-    {
-      name: "Room",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-    {
-      name: "Room",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-    {
-      name: "Room",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+        // Tính số lần đặt cho mỗi phòng
+        const roomBookings = bookingResponse.reduce((acc, booking) => {
+          const roomId = booking.room_id;
+          if (acc[roomId]) {
+            acc[roomId].count += 1;
+          } else {
+            const room = roomResponse.find((room) => room.id === roomId);
+            acc[roomId] = {
+              room_id: roomId,
+              room_number: room ? room.number : "Unknown",
+              count: 1,
+            };
+          }
+          return acc;
+        }, {});
 
-   if (loading) {
-     return <div>Loading...</div>;
-   }
+        // Chuyển đổi object thành mảng và sắp xếp theo số lần đặt giảm dần
+        const sortedRoomBookings = Object.values(roomBookings).sort(
+          (a, b) => b.count - a.count
+        );
 
-   if (error) {
-     return <div>Error: {error}</div>;
-   }
+        // Lấy 5 phòng được đặt nhiều nhất
+        const top5Rooms = sortedRoomBookings.slice(0, 5).map((roomBooking) => ({
+          room_number: roomBooking.room_number,
+          booking_count: roomBooking.count,
+        }));
+
+        setTopRooms(top5Rooms);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoomCount();
+  }, []);
+
+  const data = topRooms.map((room) => ({
+    name: `Room ${room.room_number}`,
+    booking_count: room.booking_count,
+  }));
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <main className="main-container">
@@ -183,15 +131,13 @@ function Home() {
             <h3>TOTAL REVENUE</h3>
             <BsFillGrid3X3GapFill className="card_icon" />
           </div>
-          <h2>{totalRevenue} VND</h2>
+          <h1>{totalRevenue} VND</h1>
         </div>
       </div>
 
       <div className="charts">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart
-            width={500}
-            height={300}
             data={data}
             margin={{
               top: 5,
@@ -205,15 +151,12 @@ function Home() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="pv" fill="#8884d8" />
-            <Bar dataKey="uv" fill="#82ca9d" />
+            <Bar dataKey="booking_count" fill="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
 
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart
-            width={500}
-            height={300}
             data={data}
             margin={{
               top: 5,
@@ -229,11 +172,10 @@ function Home() {
             <Legend />
             <Line
               type="monotone"
-              dataKey="pv"
+              dataKey="booking_count"
               stroke="#8884d8"
               activeDot={{ r: 8 }}
             />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
           </LineChart>
         </ResponsiveContainer>
       </div>
