@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { message } from 'antd'; // Ensure you have installed antd for message component
-import Cookies from 'js-cookie'; // Ensure you have installed js-cookie for handling cookies
+import { message } from 'antd';
+import Cookies from 'js-cookie';
 import logo from '../../assets/logoAdmin.png';
 import { Link } from 'react-router-dom';
-// import Link from "react-router-dom";
-
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); 
@@ -29,10 +26,10 @@ const Login = () => {
       const { token, user } = response.data.result;
       const tokenData = {token, userId: user.id, role: user.role};
       Cookies.set("token",  JSON.stringify(tokenData), { expires: 7 });
-      console.log(response.data.result)
+      console.log(response.data.result);
       if (user.role === "admin") {
         message.success('WELCOME ADMIN');
-        window.location.href = '/dashboard'; // Redirect to admin dashboard
+        window.location.href = '/dashboard';
       } else {
         message.error('You do not have the necessary permissions to access this area.');
       }
