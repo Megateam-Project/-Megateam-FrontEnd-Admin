@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     // Check if the token exists in cookies when the component mounts
@@ -15,9 +15,11 @@ export default function Navbar() {
   }, []);
 
   const logOutUser = () => {
+    localStorage.removeItem("login");
     Cookies.remove("token");
     setIsLoggedIn(false);
-    navigate("/");
+    // navigate("/");
+    window.location.href = "/";
   };
 
   return (
@@ -45,7 +47,7 @@ export default function Navbar() {
         )}
         <div>
           {!isLoggedIn ? (
-            <Link to="/login" className="nav-link fs-5">
+            <Link to="/" className="nav-link fs-5">
               {/* <button
                 className="btn"
                 style={{ backgroundColor: "#7C6A46", color: "white" }}
@@ -54,13 +56,19 @@ export default function Navbar() {
               </button> */}
             </Link>
           ) : (
-            <button
-              onClick={logOutUser}
-              className="btn"
-              style={{ backgroundColor: "#7C6A46", color: "white",  marginLeft: "100px"  }}
-            >
-              Logout
-            </button>
+            <Link to="/" className="nav-link fs-5">
+              <button
+                onClick={logOutUser}
+                className="btn"
+                style={{
+                  backgroundColor: "#7C6A46",
+                  color: "white",
+                  marginLeft: "100px",
+                }}
+              >
+                Logout
+              </button>
+            </Link>
           )}
         </div>
       </div>

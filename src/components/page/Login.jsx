@@ -28,11 +28,12 @@ const Login = () => {
       });
       const { token, user } = response.data.result;
       const tokenData = {token, userId: user.id, role: user.role};
-      Cookies.set("token",  JSON.stringify(tokenData), { expires: 7 });
+      Cookies.set("token", JSON.stringify(tokenData), { expires: 7 });
+      localStorage.setItem("login", "alredy login");
       console.log(response.data.result)
       if (user.role === "admin") {
         message.success('WELCOME ADMIN');
-        window.location.href = '/sidebar'; // Redirect to admin dashboard
+        window.location.href = '/home'; // Redirect to admin dashboard
       } else {
         message.error('You do not have the necessary permissions to access this area.');
       }
@@ -47,7 +48,7 @@ const Login = () => {
     }
   };
   return (
-    <div className=" d-flex justify-content-center fs-4" style={{marginLeft: "120px"}}>
+    <div className=" d-flex justify-content-center fs-4" style={{ marginLeft:"120px" }}>
       <form onSubmit={handleLoginFormSubmit} className="border rounded p-4 mb-5" style={{backgroundColor:"white", marginTop: "100px"}}>
         <div className="d-flex justify-content-center">
           <img src={logo} alt="Logo" />
