@@ -4,10 +4,7 @@ import Cookies from "js-cookie";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const navigate = useNavigate();
-
   useEffect(() => {
-    // Check if the token exists in cookies when the component mounts
     const token = Cookies.get("token");
     if (token) {
       setIsLoggedIn(true);
@@ -18,7 +15,6 @@ export default function Navbar() {
     localStorage.removeItem("login");
     Cookies.remove("token");
     setIsLoggedIn(false);
-    // navigate("/");
     window.location.href = "/";
   };
 

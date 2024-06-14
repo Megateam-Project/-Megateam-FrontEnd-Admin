@@ -36,11 +36,6 @@ export function Sidebar() {
               Manage Room
             </a>
           </li>
-          <li style={{ listStyleType: "none" }} className="mt-4">
-            <a href="#" style={{ fontSize: "18px" }} className="text-decoration-none text-black">
-              Chart
-            </a>
-          </li>
         </ul>
       </div>
     </div>
