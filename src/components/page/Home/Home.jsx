@@ -53,8 +53,8 @@ function Home() {
              acc[roomId] = { room_id: roomId, count: 1 };
            }
            return acc;
-          
          }, {});
+           console.log(roomBookings);
 
          // Chuyển đổi object thành mảng và sắp xếp theo số lần đặt giảm dần
          const sortedRoomBookings = Object.values(roomBookings).sort(
@@ -183,7 +183,7 @@ function Home() {
             <h3>TOTAL REVENUE</h3>
             <BsFillGrid3X3GapFill className="card_icon" />
           </div>
-          <h1>{totalRevenue} VND</h1>
+          <h2>{totalRevenue} VND</h2>
         </div>
       </div>
 
