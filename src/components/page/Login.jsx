@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd'; // Ensure you have installed antd for message component
 import Cookies from 'js-cookie'; // Ensure you have installed js-cookie for handling cookies
@@ -32,7 +32,7 @@ const Login = () => {
       console.log(response.data.result)
       if (user.role === "admin") {
         message.success('WELCOME ADMIN');
-        window.location.href = '/dashboard'; // Redirect to admin dashboard
+        window.location.href = '/sidebar'; // Redirect to admin dashboard
       } else {
         message.error('You do not have the necessary permissions to access this area.');
       }

@@ -10,7 +10,8 @@ import { IndexUser } from "./components/page/User/IndexUser";
 import CreateUser  from "./components/page/User/CreateUser";
 import { EditUser } from "./components/page/User/EditUser";
 import Home from "./components/page/Home/Home";
-import Login  from "./components/page/Login";
+import Login from "./components/page/Login";
+import { Sidebar } from "./components/layouts/Sidebar";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Navbar />
             <div className="row">
               <Routes>
+                <Route path="/Sidebar" element={<Sidebar />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/bookings" element={<Content />} />
                 <Route path="/bookings/edit/:bookingId" element={<Edit />} />
