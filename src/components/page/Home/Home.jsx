@@ -1,7 +1,6 @@
-
+import { useState, useEffect } from "react";
 import { FaBed } from "react-icons/fa";
 import {
-
   BsFillGrid3X3GapFill,
   BsPeopleFill,
   BsFileEarmarkTextFill,
@@ -19,51 +18,82 @@ import {
   Line,
 } from "recharts";
 
+import baseApi from "../../../shared/services/base.api";
+
 function Home() {
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+  const [roomCount, setRoomCount] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [customerCount, setCustomerCount] = useState(0);
+  const [billCount, setBillCount] = useState(0);
+  const [topRooms, setTopRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRoomCount = async () => {
+      try {
+        const roomResponse = await baseApi.getApi("rooms");
+        const customerResponse = await baseApi.getApi("users");
+        const billResponse = await baseApi.getApi("bills");
+        const bookingResponse = await baseApi.getApi("bookings");
+
+        setRoomCount(roomResponse.length);
+        setCustomerCount(customerResponse.length);
+        setBillCount(billResponse.length);
+
+        const totalRevenue = billResponse.reduce(
+          (acc, bill) => acc + parseFloat(bill.total_price),
+          0
+        );
+        setTotalRevenue(totalRevenue);
+        const roomBookings = bookingResponse.reduce((acc, booking) => {
+          const roomId = booking.room_id;
+          if (acc[roomId]) {
+            acc[roomId].count += 1;
+          } else {
+            const room = roomResponse.find((room) => room.id === roomId);
+            acc[roomId] = {
+              room_id: roomId,
+              room_number: room ? room.number : "Unknown",
+              count: 1,
+            };
+          }
+          return acc;
+        }, {});
+
+        const sortedRoomBookings = Object.values(roomBookings).sort(
+          (a, b) => b.count - a.count
+        );
+
+        // Lấy 5 phòng được đặt nhiều nhất
+        const top5Rooms = sortedRoomBookings.slice(0, 5).map((roomBooking) => ({
+          room_number: roomBooking.room_number,
+          booking_count: roomBooking.count,
+        }));
+
+        setTopRooms(top5Rooms);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoomCount();
+  }, []);
+
+  const data = topRooms.map((room) => ({
+    name: `Room ${room.room_number}`,
+    booking_count: room.booking_count,
+  }));
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <main className="main-container">
@@ -73,40 +103,38 @@ function Home() {
 
       <div className="main-cards">
         <div className="card">
-          <div className="card-inner">
+          <div className="card-inner p-2" >
             <h3>ROOMS</h3>
             <FaBed className="card_icon" />
           </div>
-          <h1>300</h1>
+          <h2 className="p-2">{roomCount}</h2>
         </div>
         <div className="card">
-          <div className="card-inner">
-            <h3>CATEGORIES</h3>
-            <BsFillGrid3X3GapFill className="card_icon" />
-          </div>
-          <h1>12</h1>
-        </div>
-        <div className="card">
-          <div className="card-inner">
+          <div className="card-inner p-2" >
             <h3>CUSTOMERS</h3>
             <BsPeopleFill className="card_icon" />
           </div>
-          <h1>33</h1>
+          <h2 className="p-2">{customerCount}</h2>
         </div>
         <div className="card">
-          <div className="card-inner">
+          <div className="card-inner p-2" >
             <h3>BILLS</h3>
             <BsFileEarmarkTextFill className="card_icon" />
           </div>
-          <h1>42</h1>
+          <h2 className="p-2">{billCount}</h2>
+        </div>
+        <div className="card">
+          <div className="card-inner p-2" >
+            <h3>TOTAL REVENUE</h3>
+            <BsFillGrid3X3GapFill className="card_icon" />
+          </div>
+          <h2 className="p-2">{totalRevenue} VND</h2>
         </div>
       </div>
 
       <div className="charts">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart
-            width={500}
-            height={300}
             data={data}
             margin={{
               top: 5,
@@ -120,15 +148,12 @@ function Home() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="pv" fill="#8884d8" />
-            <Bar dataKey="uv" fill="#82ca9d" />
+            <Bar dataKey="booking_count" fill="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
 
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart
-            width={500}
-            height={300}
             data={data}
             margin={{
               top: 5,
@@ -144,11 +169,10 @@ function Home() {
             <Legend />
             <Line
               type="monotone"
-              dataKey="pv"
+              dataKey="booking_count"
               stroke="#8884d8"
               activeDot={{ r: 8 }}
             />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
           </LineChart>
         </ResponsiveContainer>
       </div>

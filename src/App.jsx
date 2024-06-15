@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Content } from "./components/page/Booking/Index";
 import Navbar from "./components/layouts/Header";
 import { Edit } from "./components/page/Booking/Edit";
@@ -7,20 +7,30 @@ import { IndexRoom } from "./components/page/Room/IndexRoom";
 import { CreateRoomForm } from "./components/page/Room/CreateRoomForm";
 import { EditRoom } from "./components/page/Room/EditRoom";
 import { IndexUser } from "./components/page/User/IndexUser";
-import CreateUser  from "./components/page/User/CreateUser";
+import CreateUser from "./components/page/User/CreateUser";
 import { EditUser } from "./components/page/User/EditUser";
 import Home from "./components/page/Home/Home";
-import Login  from "./components/page/Login";
+import Login from "./components/page/Login";
+import { Sidebar } from "./components/layouts/Sidebar";
+import {useLayoutEffect, useState } from "react";
 
 function App() {
+  const [isLogin, setIsLoggedIn] = useState();
+  
+  useLayoutEffect(() => {
+   setIsLoggedIn(localStorage.getItem("login")); 
+  },[])
+  console.log(isLogin);
   return (
     <Router>
       <div className="container-fluid">
         <div className="row">
+          {isLogin && <Sidebar />}
           <div className="col-10">
             <Navbar />
             <div className="row">
               <Routes>
+                <Route path="/Sidebar" element={<Sidebar />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/bookings" element={<Content />} />
                 <Route path="/bookings/edit/:bookingId" element={<Edit />} />

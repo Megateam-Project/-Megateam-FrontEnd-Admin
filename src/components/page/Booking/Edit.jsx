@@ -4,6 +4,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import baseApi from "./../../../shared/services/base.api";
 import moment from "moment";
 import axios from "axios";
+import { message } from "antd";
 
 export function Edit() {
   const { bookingId } = useParams();
@@ -80,14 +81,13 @@ export function Edit() {
     try {
       const response = await axios.put(`http://127.0.0.1:8000/api/bookings/${bookingId}`, body);
       if (response.status === 200) {
-        alert("Booking updated successfully");
+        message.success("Booking updated successfully");
         navigate("/bookings");
       } else {
-        alert("Error updating booking");
+        message.error("Error updating booking");
       }
     } catch (error) {
-      alert("Error updating booking");
-      console.error("Error updating booking:", error);
+      message.error("Error updating booking");
     }
   };
 
